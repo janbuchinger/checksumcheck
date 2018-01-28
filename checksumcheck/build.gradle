@@ -7,7 +7,12 @@
  */
 
 // Apply the java-library plugin to add support for Java Library
-apply plugin: 'java-library'
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'net.janbuchinger.code.checksumcheck.ChecksumCheck'
+
+version = '0.1a'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -17,13 +22,53 @@ repositories {
 }
 
 dependencies {
-    // This dependency is exported to consumers, that is to say found on their compile classpath.
-    api 'org.apache.commons:commons-math3:3.6.1'
-
-    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
-    implementation 'com.google.guava:guava:21.0'
-
     // Use JUnit test framework
-    testImplementation 'junit:junit:4.12'
+    // testImplementation 'junit:junit:4.12'
+    
+    // Apache 2.0
+    // https://mvnrepository.com/artifact/commons-codec/commons-codec
+	compile group: 'commons-codec', name: 'commons-codec', version: '1.11'
+    
+    // Apache 2.0
+    // https://github.com/janbuchinger/mishmash
+    compile 'com.github.janbuchinger:mishmash:0.3.4'
+}
+
+// needed to get libraries from github
+allprojects {
+	repositories {
+		maven { url "https://jitpack.io" }
+	}
+}
+
+// include resources dir
+sourceSets {
+    main {
+        resources {
+            srcDirs "src/main/resources"
+        }
+    }
+}
+
+// jar file creation
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Checksum Check',
+        	'Implementation-Version': version,
+        	'Main-Class': 'net.janbuchinger.code.checksumcheck.ChecksumCheck'
+    }
+	// uncomment next line to create a standalone jar with all dependencies packed into it
+	// from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+}
+
+// create sources jar
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'src'
+    from sourceSets.main.allSource
+}
+
+// create sources and javadoc jar
+artifacts {
+    archives sourcesJar
 }
 
