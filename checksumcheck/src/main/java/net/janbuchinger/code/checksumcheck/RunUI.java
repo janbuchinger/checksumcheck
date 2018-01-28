@@ -18,11 +18,11 @@
  */
 package net.janbuchinger.code.checksumcheck;
 
-import javax.swing.SwingUtilities;
+public class RunUI implements Runnable {
 
-public class ChecksumCheck {
-
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new RunUI());
+	@Override
+	public void run() {
+		new ChecksumCheckUI();
 	}
+
 }
